@@ -38,12 +38,6 @@
         </el-button>
         <div v-show="permission">
         <el-button
-          @click.native.prevent="handleCancel(scope.$index, tableData)"
-          type="text"
-          size="small">
-          Desactivar
-        </el-button>
-        <el-button
           @click.native.prevent="handleDelete(scope.$index, tableData)"
           type="text"
           size="small">
@@ -169,26 +163,11 @@ this.$router.push('/creauser');
       console.log(this.BranchObject);
       this.$refs["edit-modal"].show();
     },
-      handleCancel(index, row) {
-
-        axios.get(buildURL("URL_API", "deactivateUser/"+ index))
-        .then(res => {
- this.$notify({
-            message:'Eliminado exitosamente',
-            title: this.name_app,
-            component: NotificationTemplate,
-            icon: "tim-icons icon-bell-55",
-            type: "danger",
-            timeout: 4000
-          });
-          this.showallbranch();
-        }).catch(err=>console.log(err));
-
-        
-      },
-      handleDelete(index, row) {
-
-        axios.get(buildURL("URL_API", "deactivateUser/"+ index))
+      handleDelete(index, tableData) {
+        const AuthToken = 'Bearer ' + localStorage.getItem('token');
+        axios.delete(buildURL("URL_API", "branch/"+tableData[index].id),{headers:{ 
+            'Authorization': AuthToken,
+         }})
         .then(res => {
  this.$notify({
             message:'Eliminado exitosamente',

@@ -180,10 +180,7 @@ this.$router.push('/creauser');
 
 
 
-      handleEdit(index, row) {
-          this.$router.push(`/user/${row[index].id}`);
-        
-      },
+  
       handleCancel(index, row) {
 
         axios.get(buildURL("URL_API", "deactivateUser/"+ row[index].id))

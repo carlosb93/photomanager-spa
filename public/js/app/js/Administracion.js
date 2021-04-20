@@ -969,7 +969,8 @@ function buildURL(api) {
                   _this.data.name = _this.form.name;
                   _this.data.description = _this.form.description;
                   _this.data.code = _this.form.code;
-                  axios__WEBPACK_IMPORTED_MODULE_1___default().put(buildURL("URL_API", "branch/" + _this.form.id), _this.data, {
+                  _this.data.modfromnegocio = false;
+                  axios__WEBPACK_IMPORTED_MODULE_1___default().put(buildURL("URL_API", "user/" + _this.form.id), _this.data, {
                     headers: {
                       "Authorization": AuthToken
                     }
@@ -977,7 +978,7 @@ function buildURL(api) {
                 } else {
                   // await this.addCalendar(this.form);
                   _this.form.categoria_id = 1;
-                  axios__WEBPACK_IMPORTED_MODULE_1___default().post(buildURL("URL_API", "branch"), _this.form, {
+                  axios__WEBPACK_IMPORTED_MODULE_1___default().post(buildURL("URL_API", "user"), _this.form, {
                     headers: {
                       "Authorization": AuthToken
                     }
@@ -1554,9 +1555,6 @@ function buildURL(api) {
       };
       console.log(this.UserObject);
       this.$refs["edit-modal"].show();
-    },
-    handleEdit: function handleEdit(index, row) {
-      this.$router.push("/user/".concat(row[index].id));
     },
     handleCancel: function handleCancel(index, row) {
       var _this2 = this;

@@ -119,6 +119,7 @@ export default {
         this.data.name = this.form.name
         this.data.description = this.form.description
         this.data.code = this.form.code
+        this.data.modfromnegocio = false
         axios.put(buildURL("URL_API", "user/"+this.form.id), this.data,{headers:{ 
         "Authorization": AuthToken
       }});

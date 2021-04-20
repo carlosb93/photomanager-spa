@@ -64,6 +64,7 @@ Route::group(['namespace' => 'Api','middleware' => ['auth:api']], static functio
     Route::resource('calendar', '\App\Http\Controllers\Api\CalendarController');
     Route::resource('branch', '\App\Http\Controllers\Api\BranchController');
     Route::resource('role', '\App\Http\Controllers\Api\RoleController');
+    Route::get('user/listusers', [UserController::class, 'listusers']);
     Route::resource('user', '\App\Http\Controllers\Api\UserController');
     
     Route::get('index', [HomeController::class, 'index'])->name('home.api');

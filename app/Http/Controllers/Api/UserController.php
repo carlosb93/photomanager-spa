@@ -49,6 +49,21 @@ class UserController extends Controller
         }
         return response()->json(['users' => $users,'bussines' => auth()->user()->businesses, 'usersfrombusiness' => $usersfrombusiness]);
     }
+    public function listusers()
+    {
+       
+        $branch = Branch::all();
+      
+        foreach($branch as $item){
+            $userswithbranch = DB::table('branch_user')->where('branch_id',$item->id)->get()->pluck('user_id');
+        }
+        
+        $users = User::WhereNotIn('id',$userswithbranch)->with('branches')->with('roles')->get();
+      
+
+       
+        return response()->json(['users' => $users]);
+    }
  
 
     public function show($id)
@@ -66,27 +81,43 @@ class UserController extends Controller
  
     public function update(Request $request, $id)
     {
-        $user =  User::where('id',$id)->first();
+        if($request->modfromnegocio){
+
+            $branch_user = DB::table('branch_user')
+            ->where('user_id',$request->usuario_id)
+            ->update(['branch_id' => $request->branches_id]);
+           
+
+            $role_user = DB::table('role_user')
+            ->where('user_id',$request->usuario_id)
+            ->update(['role_id' => $request->role_id]);
+
+        return response()->json('done',200);
+
+        }else{
+            $user =  User::where('id',$id)->first();
  
-        if (!$user) {
-            return response()->json('sorry', 400);
+            if (!$user) {
+                return response()->json('sorry', 400);
+            }
+     
+            $updated = $user->fill($request->all())->save();
+     
+            if ($updated)
+                return response()->json('done'
+                //     [
+                //     'success' => true
+                // ]
+            );
+            else
+                return response()->json('sorry'
+                //     [
+                //     'success' => false,
+                //     'message' => 'user could not be updated'
+                // ]
+                , 500);
         }
- 
-        $updated = $user->fill($request->all())->save();
- 
-        if ($updated)
-            return response()->json('done'
-            //     [
-            //     'success' => true
-            // ]
-        );
-        else
-            return response()->json('sorry'
-            //     [
-            //     'success' => false,
-            //     'message' => 'user could not be updated'
-            // ]
-            , 500);
+        
     }
  
     public function destroy($id)

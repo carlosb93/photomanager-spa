@@ -21,7 +21,9 @@
     </el-table-column>
     <el-table-column prop="name" label="Nombre">
     </el-table-column>
-    <el-table-column prop="branches" label="Rama">
+    <el-table-column prop="branches_name" label="Rama">
+    </el-table-column>
+    <el-table-column prop="role_name" label="Rama">
     </el-table-column>
 
 <el-table-column
@@ -111,7 +113,10 @@ function buildURL(api, resource = "") {
       },
 
         tableData: [],
-        branchesData: []
+        branchesName: [],
+        branchesId: [],
+        rolesName: [],
+        rolesId: [],
       }
     },
     created(){
@@ -121,9 +126,6 @@ this.showallusers();
 
     },
     methods: {
-      go_to_link(){
-this.$router.push('/creauser');
-      },
       showallusers(){
         let user = [];
         const AuthToken = 'Bearer ' + localStorage.getItem('token');
@@ -132,12 +134,27 @@ this.$router.push('/creauser');
             'Authorization': AuthToken,
          }})
         .then(res => {
+          console.log(res.data);
           this.tableData =[]
           
          for (let i = 0; i < res.data.usersfrombusiness.length; i++) {
-           this.branchesData =[]
+           this.branchesName =[]
+           this.branchesId =[]
          for (let j = 0; j < res.data.usersfrombusiness[i].branches.length; j++) {
-        this.branchesData.push(res.data.usersfrombusiness[i].branches[j].name+',  ');
+        this.branchesName.push(res.data.usersfrombusiness[i].branches[j].name);
+         }
+           console.log(this.branchesName);
+           console.log(this.branchesId);
+         for (let j = 0; j < res.data.usersfrombusiness[i].branches.length; j++) {
+        this.branchesId.push(res.data.usersfrombusiness[i].branches[j].id);
+         }
+           this.rolesName =[]
+           this.rolesId =[]
+         for (let j = 0; j < res.data.usersfrombusiness[i].roles.length; j++) {
+        this.rolesName.push(res.data.usersfrombusiness[i].roles[j].name);
+         }
+         for (let j = 0; j < res.data.usersfrombusiness[i].roles.length; j++) {
+        this.rolesId.push(res.data.usersfrombusiness[i].roles[j].id);
          }
         
              
@@ -145,7 +162,10 @@ this.$router.push('/creauser');
               id: res.data.usersfrombusiness[i].id,
               name: res.data.usersfrombusiness[i].name,
               email: res.data.usersfrombusiness[i].email,
-              branches: this.branchesData
+              branches_name: this.branchesName[0],
+              branches_id: this.branchesId[0],
+              role_name: this.rolesName,
+              role_id: this.rolesId,
             };
 
              this.tableData.push(user);
@@ -168,8 +188,8 @@ this.$router.push('/creauser');
       this.showallusers();
     },
       openEditModal(index,tabledata) {
-      let { id, name,description, code} = tabledata[index];
-      this.UserObject = { id, name,description, code};
+      let { id, name, email, description, code, role_name, role_id, branches_id, branches_name} = tabledata[index];
+      this.UserObject = { id, name, email, description, code, role_name, role_id, branches_id, branches_name};
       console.log(this.UserObject);
       this.$refs["edit-modal"].show();
     },
